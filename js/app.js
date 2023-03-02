@@ -5,6 +5,7 @@ const loadAIs = async (dataLimit) => {
     const res = await fetch(URL);
     const data = await res.json();
     showAIs(data.data.tools, dataLimit);
+    sort(data.data.tools);
   } catch (error) {
     console.log(error);
   }
@@ -29,9 +30,9 @@ const showAIs = (AIs, dataLimit) => {
         <div class="card-body">
             <h5 class="card-title">Features</h5>
             <div class="card-text">
-                1. ${features[0]}<br>
-                2. ${features[1]}<br>
-                3. ${features[2]}
+                <ol>
+                    ${liGenerator(features)}
+                </ol>
             </div>
         </div>
         <div class="card-footer bg-body mt-3 d-flex justify-content-between align-items-center">
@@ -47,16 +48,18 @@ const showAIs = (AIs, dataLimit) => {
     </div>`;
   });
 
-  document.getElementById("sort").addEventListener("click", function () {
-    const sorted = AIs.sort(
-      (a, b) => Date.parse(a.published_in) - Date.parse(b.published_in)
-    );  
-    // console.log(abc);
-    showAIs(sorted, false);
-  });
-
   //   stop spinner
   toggleClass("spinner", false);
+};
+
+// sorting function
+const sort = (data) => {
+  const sorted = data.sort(
+    (a, b) => Date.parse(b.published_in) - Date.parse(a.published_in)
+  );
+  document.getElementById("sort").addEventListener("click", function () {
+    showAIs(sorted, false);
+  });
 };
 
 // see-more button event listener show all data
@@ -107,36 +110,44 @@ const showAIDetails = (AI) => {
             <p class="fs-4">${description}</p>
             <div class="row gap-3 mx-2 my-3">
                 <p class="col px-4 py-2 rounded bg-white text-success fw-bold w-25 text-center"> ${
-                  pricing[0].price ? pricing[0].price : "Free Of Cost"
-                } <br> ${pricing[0].plan ? pricing[0].plan : "Basic"}</p>
+                  pricing ? pricing[0].price : "Free Of Cost"
+                } <br> ${pricing ? pricing[0].plan : "Basic"}</p>
                 <p class="col px-4 py-2 rounded bg-white text-warning fw-bold w-25 text-center">${
-                  pricing[1].price ? pricing[1].price : "Free Of Cost"
-                } <br> ${pricing[1].plan ? pricing[1].plan : "Pro"}</p>
+                  pricing ? pricing[1].price : "Free Of Cost"
+                } <br> ${pricing ? pricing[1].plan : "Pro"}</p>
                 <p class="col px-4 py-2 rounded bg-white text-danger fw-bold w-25 text-center">${
-                  pricing[2].price ? pricing[2].price : "Free Of Cost"
-                } <br> ${pricing[2].plan ? pricing[2].plan : "Enterprise"}</p>
+                  pricing ? pricing[2].price : "Free Of Cost"
+                } <br> ${pricing ? pricing[2].plan : "Enterprise"}</p>
             </div>
             <div class="d-flex">
                 <div class="w-50">
                     <h5>Features</h5>
                     <ul>
-                        <li>${features["1"].feature_name}</li>
-                        <li>${features["2"].feature_name}</li>
-                        <li>${features["3"].feature_name}</li>
+                        <li>${
+                          features
+                            ? features["1"].feature_name
+                            : "No Data Found"
+                        }</li>
+                        <li>${
+                          features
+                            ? features["2"].feature_name
+                            : "No Data Found"
+                        }</li>
+                        <li>${
+                          features
+                            ? features["3"].feature_name
+                            : "No Data Found"
+                        }</li>
                     </ul>
                 </div>
                 <div>
                     <h5>Integrations</h5>
                     <ul>
-                        <li>${
-                          integrations[0] ? integrations[0] : "No data Found"
-                        }</li>
-                        <li>${
-                          integrations[1] ? integrations[1] : "No data Found"
-                        }</li>
-                        <li>${
-                          integrations[2] ? integrations[2] : "No data Found"
-                        }</li>
+                        ${
+                          liGenerator(integrations)
+                            ? liGenerator(integrations)
+                            : "No Data Found"
+                        }
                     </ul>
                 </div>
             </div>
@@ -150,12 +161,12 @@ const showAIDetails = (AI) => {
             }" class="card-img-top rounded" alt="..." height="300" />
             <div class="card-body">
             <h5 class="card-title text-center">${
-              input_output_examples[0].input
+              input_output_examples
                 ? input_output_examples[0].input
                 : "Can you give any example?"
             }</h5>
             <p class="card-text text-center">${
-              input_output_examples[0].output
+              input_output_examples
                 ? input_output_examples[0].output
                 : "No! Not Yet! Take a break!!!"
             }</p>
@@ -163,6 +174,18 @@ const showAIDetails = (AI) => {
         </div>
         </div>
     </div>`;
+};
+
+const liGenerator = (arr) => {
+  let li = "";
+  if (Array.isArray(arr)) {
+    for (const i of arr) {
+      li += `<li>${i}</li>`;
+    }
+    return li;
+  } else {
+    return li;
+  }
 };
 
 loadAIs(true);
