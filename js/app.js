@@ -12,12 +12,12 @@ const loadAIs = async (dataLimit) => {
 
 // display fetched data
 const showAIs = (AIs, dataLimit) => {
-    if (AIs.length > 6 && dataLimit) {
-        AIs = AIs.slice(0, 6);
-        toggleClass('see-more', true);
-    } else {
-        toggleClass('see-more', false);
-    }
+  if (AIs.length > 6 && dataLimit) {
+    AIs = AIs.slice(0, 6);
+    toggleClass("see-more", true);
+  } else {
+    toggleClass("see-more", false);
+  }
   const cardsContainer = document.getElementById("cards-container");
   cardsContainer.innerHTML = "";
   AIs.forEach((AI) => {
@@ -40,7 +40,7 @@ const showAIs = (AIs, dataLimit) => {
                 <p><i class="fa-solid fa-calendar-days"></i> ${published_in}</p>
             </div>
             <div>
-                <i class="fa-solid fa-circle-arrow-right fs-2"></i>
+                <i class="fa-solid fa-circle-arrow-right fs-2" onclick="loadAIDetails('${id}')" data-bs-toggle="modal" data-bs-target="#AIModal"></i>
             </div>
         </div>
         </div>
@@ -48,12 +48,13 @@ const showAIs = (AIs, dataLimit) => {
   });
 
   //   stop spinner
-  toggleClass('spinner', false);
+  toggleClass("spinner", false);
 };
 
-document.getElementById('see-more').addEventListener('click', function(){
-    loadAIs(false);
-})
+// see-more button event listener show all data
+document.getElementById("see-more").addEventListener("click", function () {
+  loadAIs(false);
+});
 
 // toggleClass
 const toggleClass = (id, condition) => {
@@ -63,6 +64,91 @@ const toggleClass = (id, condition) => {
   } else {
     element.classList.add("d-none");
   }
+};
+
+// loadAI fetch data
+const loadAIDetails = async (id) => {
+  try {
+    const URL = `https://openapi.programming-hero.com/api/ai/tool/${id}`;
+    const res = await fetch(URL);
+    const data = await res.json();
+    showAIDetails(data.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// showAI's fetched data
+const showAIDetails = (AI) => {
+  const {
+    description,
+    image_link,
+    features,
+    integrations,
+    pricing,
+    accuracy,
+    input_output_examples,
+  } = AI;
+  const modalBody = document.getElementById("modal-body");
+  modalBody.innerHTML = "";
+  modalBody.innerHTML = `
+    <div class="row row-cols-1 row-cols-md-2 g-4 my-5">
+        <div class="col">
+        <div class="card h-100 border-danger-subtle bg-danger-subtle">
+            <div class="card-body">
+            <p class="fs-4">${description}</p>
+            <div class="row gap-3 mx-2 my-3">
+                <p class="col px-4 py-2 rounded bg-white text-success fw-bold w-25 text-center"> ${
+                  pricing[0].price ? pricing[0].price : "Free Of Cost"
+                } <br> ${pricing[0].plan}</p>
+                <p class="col px-4 py-2 rounded bg-white text-warning fw-bold w-25 text-center">${
+                  pricing[1].price ? pricing[1].price : "Free Of Cost"
+                } <br> ${pricing[1].plan}</p>
+                <p class="col px-4 py-2 rounded bg-white text-danger fw-bold w-25 text-center">${
+                  pricing[2].price ? pricing[2].price : "Free Of Cost"
+                } <br> ${pricing[2].plan}</p>
+            </div>
+            <div class="d-flex">
+                <div class="w-50">
+                    <h5>Features</h5>
+                    <ul>
+                        <li>${features["1"].feature_name}</li>
+                        <li>${features["2"].feature_name}</li>
+                        <li>${features["3"].feature_name}</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Integrations</h5>
+                    <ul>
+                        <li>${integrations[0]}</li>
+                        <li>${integrations[1]}</li>
+                        <li>${integrations[2]}</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="col">
+        <div class="card h-100 p-2">
+            <img src="${
+              image_link[0]
+            }" class="card-img-top rounded" alt="..." height="300" />
+            <div class="card-body">
+            <h5 class="card-title text-center">${
+              input_output_examples[0].input
+                ? input_output_examples[0].input
+                : "Can you give any example?"
+            }</h5>
+            <p class="card-text text-center">${
+              input_output_examples[0].output
+                ? input_output_examples[0].output
+                : "No! Not Yet! Take a break!!!"
+            }</p>
+            </div>
+        </div>
+        </div>
+    </div>`;
 };
 
 loadAIs(true);
