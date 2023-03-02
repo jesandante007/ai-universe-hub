@@ -1,18 +1,23 @@
 // fetch data from API
-const loadAIs = async () => {
+const loadAIs = async (dataLimit) => {
   try {
     const URL = "https://openapi.programming-hero.com/api/ai/tools";
     const res = await fetch(URL);
     const data = await res.json();
-    showAIs(data.data.tools);
+    showAIs(data.data.tools, dataLimit);
   } catch (error) {
     console.log(error);
   }
 };
 
 // display fetched data
-const showAIs = (AIs) => {
-    
+const showAIs = (AIs, dataLimit) => {
+    if (AIs.length > 6 && dataLimit) {
+        AIs = AIs.slice(0, 6);
+        toggleClass('see-more', true);
+    } else {
+        toggleClass('see-more', false);
+    }
   const cardsContainer = document.getElementById("cards-container");
   cardsContainer.innerHTML = "";
   AIs.forEach((AI) => {
@@ -46,6 +51,10 @@ const showAIs = (AIs) => {
   toggleClass('spinner', false);
 };
 
+document.getElementById('see-more').addEventListener('click', function(){
+    loadAIs(false);
+})
+
 // toggleClass
 const toggleClass = (id, condition) => {
   const element = document.getElementById(id);
@@ -56,4 +65,4 @@ const toggleClass = (id, condition) => {
   }
 };
 
-loadAIs();
+loadAIs(true);
