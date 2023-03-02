@@ -120,9 +120,15 @@ const showAIDetails = (AI) => {
                 <div>
                     <h5>Integrations</h5>
                     <ul>
-                        <li>${integrations[0]}</li>
-                        <li>${integrations[1]}</li>
-                        <li>${integrations[2]}</li>
+                        <li>${
+                          integrations[0] ? integrations[0] : "No data Found"
+                        }</li>
+                        <li>${
+                          integrations[1] ? integrations[1] : "No data Found"
+                        }</li>
+                        <li>${
+                          integrations[2] ? integrations[2] : "No data Found"
+                        }</li>
                     </ul>
                 </div>
             </div>
