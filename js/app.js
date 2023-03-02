@@ -47,6 +47,14 @@ const showAIs = (AIs, dataLimit) => {
     </div>`;
   });
 
+  document.getElementById("sort").addEventListener("click", function () {
+    const sorted = AIs.sort(
+      (a, b) => Date.parse(a.published_in) - Date.parse(b.published_in)
+    );  
+    // console.log(abc);
+    showAIs(sorted, false);
+  });
+
   //   stop spinner
   toggleClass("spinner", false);
 };
@@ -100,13 +108,13 @@ const showAIDetails = (AI) => {
             <div class="row gap-3 mx-2 my-3">
                 <p class="col px-4 py-2 rounded bg-white text-success fw-bold w-25 text-center"> ${
                   pricing[0].price ? pricing[0].price : "Free Of Cost"
-                } <br> ${pricing[0].plan}</p>
+                } <br> ${pricing[0].plan ? pricing[0].plan : "Basic"}</p>
                 <p class="col px-4 py-2 rounded bg-white text-warning fw-bold w-25 text-center">${
                   pricing[1].price ? pricing[1].price : "Free Of Cost"
-                } <br> ${pricing[1].plan}</p>
+                } <br> ${pricing[1].plan ? pricing[1].plan : "Pro"}</p>
                 <p class="col px-4 py-2 rounded bg-white text-danger fw-bold w-25 text-center">${
                   pricing[2].price ? pricing[2].price : "Free Of Cost"
-                } <br> ${pricing[2].plan}</p>
+                } <br> ${pricing[2].plan ? pricing[2].plan : "Enterprise"}</p>
             </div>
             <div class="d-flex">
                 <div class="w-50">
