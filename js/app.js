@@ -1,5 +1,7 @@
 // fetch data from API
 const loadAIs = async (dataLimit) => {
+  // start spinner
+  toggleClass("spinner", true);
   try {
     const URL = "https://openapi.programming-hero.com/api/ai/tools";
     const res = await fetch(URL);
@@ -58,6 +60,8 @@ const sort = (data) => {
     (a, b) => Date.parse(b.published_in) - Date.parse(a.published_in)
   );
   document.getElementById("sort").addEventListener("click", function () {
+    // start spinner
+    toggleClass("spinner", true);
     showAIs(sorted, false);
   });
 };
@@ -156,8 +160,16 @@ const showAIDetails = (AI) => {
         </div>
         <div class="col">
         <div class="card h-100 p-2">
-            <img src="${image_link[0]}" class="card-img-top rounded position-relative" height="300"/>
-            ${accuracy.score? `<span class="badge text-bg-danger position-absolute end-0 p-2">${accuracy.score * 100}% accuracy</span>`: ""}
+            <img src="${
+              image_link[0]
+            }" class="card-img-top rounded position-relative" height="300"/>
+            ${
+              accuracy.score
+                ? `<span class="badge text-bg-danger position-absolute end-0 p-2">${
+                    accuracy.score * 100
+                  }% accuracy</span>`
+                : ""
+            }
             <div class="card-body">
             <h5 class="card-title text-center">${
               input_output_examples
